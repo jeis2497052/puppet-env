@@ -1,0 +1,7 @@
+version: '2.1'
+
+services:
+  debian:
+    extends:
+      file: agents.yml
+      service: agent-debian

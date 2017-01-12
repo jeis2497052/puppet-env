@@ -1,0 +1,7 @@
+version: '2.1'
+
+services:
+  alpine:
+    extends:
+      file: agents.yml
+      service: agent-alpine

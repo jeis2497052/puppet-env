@@ -1,16 +1,16 @@
-version: '2'
+version: '2.1'
 
 services:
   puppet:
     restart: always
     hostname: puppet
-    image: puppet/puppetserver:2.4.0
+    image: ${PUPPET_SERVER_IMAGE}${PUPPET_SERVER_VERSION}
     ports:
       - 8140
     volumes:
-      - /srv/docker/plabs/code:/etc/puppetlabs/code/
-      - /srv/docker/plabs/puppet/ssl:/etc/puppetlabs/puppet/ssl/
-    #  - /srv/docker/plabs/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
+      - ${CODE_DIR}:/etc/puppetlabs/code/
+      - ${BASE_DIR}/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+    #  - ${BASE_DIR}/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
     # In some cases unqualified hostnames can have the .local suffix
     # added, I've seen this under Docker of Mac Beta for instance.
     # Due to needing to access PuppetDB on same hostame as signed in the
@@ -23,32 +23,32 @@ services:
   puppetdbpostgres:
     restart: always
     container_name: postgres
-    image: puppet/puppetdb-postgres
+    image: ${POSTGRES_IMAGE}${POSTGRES_VERSION}
     environment:
       - POSTGRES_PASSWORD=puppetdb
       - POSTGRES_USER=puppetdb
     expose:
       - 5432
     volumes:
-      - /srv/docker/plabs/puppetdb-postgres/data:/var/lib/postgresql/data/
+      - ${BASE_DIR}/puppetdb-postgres/data:/var/lib/postgresql/data/
 
   puppetdb:
     restart: always
     hostname: puppetdb
-    image: puppetdb
+    image: ${PUPPETDB_IMAGE}${PUPPETDB_VERSION}
     ports:
       - 8080:8080
       - 8081:8081
     volumes:
-      - /srv/docker/plabs/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
+      - ${BASE_DIR}/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
     depends_on:
       - puppet
 
   puppetboard:
     restart: always
-    image: puppetboard
+    image: ${PUPPETBOARD_IMAGE}${PUPPETBOARD_VERSION}
     ports:
-      - 80:80
+      - ${PUPPETBOARD_PORT}:80
     environment:
       - PUPPETDB_HOST=puppetdb
       - PUPPETDB_PORT=8080
@@ -56,38 +56,3 @@ services:
       - ENABLE_CATALOG=True
     depends_on:
       - puppetdb
-
-  agent-alpine:
-    restart: never
-    image: puppet/puppet-agent-alpine
-    hostname: alpine.localdomain
-    volumes:
-      - /srv/docker/plabs/agents/alpine/etc/puppetlabs:/etc/puppetlabs
-
-  agent-ubuntu:
-    restart: never
-    image: puppet/puppet-agent-ubuntu
-    hostname: ubuntu.localdomain
-    volumes:
-      - /srv/docker/plabs/agents/ubuntu/etc/puppetlabs:/etc/puppetlabs
-
-  agent-centos:
-    restart: never
-    image: puppet/puppet-agent-centos
-    hostname: centos.localdomain
-    volumes:
-      - /srv/docker/plabs/agents/centos/etc/puppetlabs:/etc/puppetlabs
-
-  agent-debian:
-    restart: never
-    image: puppet/puppet-agent-debian
-    hostname: debian.localdomain
-    volumes:
-      - /srv/docker/plabs/agents/debian/etc/puppetlabs:/etc/puppetlabs
-
-  puppetexplorer:
-    restart: always
-    image: puppet/puppetexplorer
-    ports:
-      - 8000:80
-    read_only: true
