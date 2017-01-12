@@ -5,13 +5,19 @@ services:
   agent-alpine:
     restart: 'no'
     image: puppet/puppet-agent-alpine
+    entrypoint:
+      - /bin/sleep
+      - '2147483647'
     hostname: ${HOSTNAME:-alpine}.localdomain
     volumes:
-      - ${BASE_DIR}/agents/${HOSTNAME-alpine}/etc/puppetlabs:/etc/puppetlabs
+      - ${BASE_DIR}/agents/${HOSTNAME:-alpine}/etc/puppetlabs:/etc/puppetlabs
 
   agent-ubuntu:
     restart: 'no'
     image: puppet/puppet-agent-ubuntu
+    entrypoint:
+      - /bin/sleep
+      - '2147483647'
     hostname: ${HOSTNAME:-ubuntu}.localdomain
     volumes:
       - ${BASE_DIR}/agents/${HOSTNAME:-ubuntu}/etc/puppetlabs:/etc/puppetlabs
@@ -20,7 +26,9 @@ services:
     restart: 'no'
     image: puppet/puppet-agent-centos
     hostname: ${HOSTNAME:-centos}.localdomain
-    command: pupppet agent -t ${DEBUG}
+    entrypoint:
+      - /bin/sleep
+      - '2147483647'
     volumes:
       - ${BASE_DIR}/agents/${HOSTNAME:-centos}/etc/puppetlabs:/etc/puppetlabs
 
@@ -28,5 +36,8 @@ services:
     restart: 'no'
     image: puppet/puppet-agent-debian
     hostname: ${HOSTNAME:-debian}.localdomain
+    entrypoint:
+      - /bin/sleep
+      - '2147483647'
     volumes:
       - ${BASE_DIR}/agents/${HOSTNAME:-debian}/etc/puppetlabs:/etc/puppetlabs
