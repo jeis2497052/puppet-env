@@ -6,38 +6,38 @@ services:
     restart: 'no'
     image: puppet/puppet-agent-alpine
     entrypoint:
-      - /bin/sleep
-      - '2147483647'
-    hostname: ${HOSTNAME:-alpine}.localdomain
-    volumes:
-      - ${BASE_DIR}/agents/${HOSTNAME:-alpine}/etc/puppetlabs:/etc/puppetlabs
+      - /usr/bin/puppet
+      - agent
+      - '--no-daemonize'
+      - '-v'
+      - '--summarize'
 
   agent-ubuntu:
     restart: 'no'
-    image: puppet/puppet-agent-ubuntu
+    image: ubuntu-devel
     entrypoint:
-      - /bin/sleep
-      - '2147483647'
-    hostname: ${HOSTNAME:-ubuntu}.localdomain
-    volumes:
-      - ${BASE_DIR}/agents/${HOSTNAME:-ubuntu}/etc/puppetlabs:/etc/puppetlabs
+      - /opt/puppetlabs/puppet/bin/puppet
+      - agent
+      - '--no-daemonize'
+      - '-v'
+      - '--summarize'
 
   agent-centos:
     restart: 'no'
     image: puppet/puppet-agent-centos
-    hostname: ${HOSTNAME:-centos}.localdomain
     entrypoint:
-      - /bin/sleep
-      - '2147483647'
-    volumes:
-      - ${BASE_DIR}/agents/${HOSTNAME:-centos}/etc/puppetlabs:/etc/puppetlabs
+      - /opt/puppetlabs/puppet/bin/puppet
+      - agent
+      - '--no-daemonize'
+      - '-v'
+      - '--summarize'
 
   agent-debian:
     restart: 'no'
     image: puppet/puppet-agent-debian
-    hostname: ${HOSTNAME:-debian}.localdomain
     entrypoint:
-      - /bin/sleep
-      - '2147483647'
-    volumes:
-      - ${BASE_DIR}/agents/${HOSTNAME:-debian}/etc/puppetlabs:/etc/puppetlabs
+      - /opt/puppetlabs/puppet/bin/puppet
+      - agent
+      - '--no-daemonize'
+      - '-v'
+      - '--summarize'
